@@ -71,7 +71,7 @@ function MainWrapper({ children, Logout, userEmail }) {
         </UserPanel>
       </Header>
       <Content>{children}</Content>
-      <Footer>Task manager example by Vadim Isakov</Footer>
+      <Footer>Task manager example by <a target='_blank' href='https://www.linkedin.com/in/vadim-isakov/'>Vadim Isakov</a></Footer>
     </React.Fragment>
   );
 }
