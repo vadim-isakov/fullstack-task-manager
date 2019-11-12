@@ -8,6 +8,7 @@ const Header = styled(Layout.Header)`
   display: flex;
   flex-direction: row;
   align-items: center;
+  line-height: inherit!important;
 `;
 const Logo = styled.div`
   color: white;
