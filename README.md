@@ -1,4 +1,4 @@
-# Fullstack task manager. Using FastAPI and React Boilerplate.
+# Fullstack task manager.
 
 [![Build Status](https://travis-ci.com/vadim-isakov/fullstack-task-manager.svg?branch=master)](https://travis-ci.com/vadim-isakov/fullstack-task-manager)
 
