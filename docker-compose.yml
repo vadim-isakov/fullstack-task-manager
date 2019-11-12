@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  nginx:
+    image: valian/docker-nginx-auto-ssl
+    restart: on-failure
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ssl_data:/etc/resty-auto-ssl
+    environment:
+      ALLOWED_DOMAINS: ${SITE}
+      SITES: ${SITE}=frontend:80
+
+  frontend:
+    container_name: task_manager_frontend
+    image: nginx:stable-alpine
+    environment:
+      API_URL: "http://dockerhost:5000"
+    volumes:
+      - ./frontend/nginx.tmpl:/etc/nginx/conf.d/nginx.tmpl
+      - ./frontend/app/build:/usr/share/nginx/html
+    command: /bin/sh -c "envsubst
+     '$$API_URL' < /etc/nginx/conf.d/nginx.tmpl > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    depends_on:
+      - dockerhost
+
+  db:
+    container_name: task_manager_db
+    image: mysql:5.7
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    env_file:
+      - .env.mysql
+
+  backend:
+    container_name: task_manager_backend
+    image: task_manager_backend
+    build: ./backend
+    volumes:
+      - ./backend:/app
+    links:
+      - db
+    ports:
+      - "5000:80"
+    env_file:
+      - .env
+      - .env.mysql
+      - .env.secret
+    environment:
+      EMAIL: 'noreply@task_manager.com'
+      MAIL_USERNAME: ''
+      MAIL_PASSWORD: ''
+      SMTP_SERVER: "dockerhost"
+      SMTP_PORT: 1025
+    depends_on:
+      - dockerhost
+
+    
+##Comment if don't use that
+  mailhog:
+    container_name: task_manager_mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - 1025:1025
+      - 8025:8025
+    logging:
+      driver: none 
+
+  dockerhost:
+    image: qoomon/docker-host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: on-failure
+
+
+volumes:
+  ssl_data:

@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  frontend:
+    container_name: task_manager_dev_frontend
+    image: node:alpine
+    volumes:
+      - ./frontend/app:/home
+    environment:
+      API_URL: "http://dockerhost:5000/"
+    working_dir: /home
+    ports:
+      - "80:3000"
+    command: npm run start
+    depends_on:
+      - dockerhost
+
+  db:
+    container_name: task_manager_dev_db
+    image: mysql:5.7
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    env_file:
+      - .env.mysql
+
+  backend:
+    container_name: task_manager_dev_backend
+    image: task_manager_backend
+    build: ./backend
+    volumes:
+      - ./backend:/app
+    links:
+      - db
+    ports:
+      - "5000:80"
+    env_file:
+      - .env
+      - .env.mysql
+      - .env.secret
+    environment:
+      EMAIL: 'noreply@task_manager.com'
+      MAIL_USERNAME: ''
+      MAIL_PASSWORD: ''
+      SMTP_SERVER: "dockerhost"
+      SMTP_PORT: 1025
+    depends_on:
+      - dockerhost
+    
+  mailhog:
+    container_name: task_manager_dev_mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - 1025:1025
+      - 8025:8025
+    logging:
+      driver: none
+
+  dockerhost:
+    image: qoomon/docker-host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: on-failure

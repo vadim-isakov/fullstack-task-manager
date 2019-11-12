@@ -1,0 +1,5 @@
+const VIEW_TASK_RELATIVE_PATH = '/view-task';
+const VIEW_TASK_ABSOLUTE_PATH =
+  window.location.origin + VIEW_TASK_RELATIVE_PATH;
+
+export { VIEW_TASK_RELATIVE_PATH, VIEW_TASK_ABSOLUTE_PATH };

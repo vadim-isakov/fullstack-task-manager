@@ -1,0 +1,16 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - cp ./.env.example ./.env
+  - echo SECRET_KEY=$(openssl rand -hex 32) > ./.env.secret
+
+install:
+  - bash ./scripts/install_frontend.sh
+  - bash ./scripts/build_frontend.sh
+
+script:
+  - bash ./scripts/start_backend_tests.sh
+  - bash ./scripts/start_e2e_tests.sh
