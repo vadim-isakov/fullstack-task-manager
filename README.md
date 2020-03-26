@@ -2,12 +2,6 @@
 
 [![Build Status](https://travis-ci.com/vadim-isakov/fullstack-task-manager.svg?branch=master)](https://travis-ci.com/vadim-isakov/fullstack-task-manager)
 
-## Live example
-https://fullstack-task-manager.site/
-
-* Api documentation: http://fullstack-task-manager.site:5000/docs
-* Local mail server: http://fullstack-task-manager.site:8025/
-
 
 ## Getting Started
 
